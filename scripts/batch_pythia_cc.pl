@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl -w
+#!/usr/bin/perl -w
 
 $startNum = $ARGV[0];
 $jobsNum = $ARGV[1];
@@ -25,10 +25,9 @@ while ($i < $startNum+$jobsNum) {
     }
     
     $randNum = int(rand(90000000));
-    print "$randNum\n";
     
-    open(TEMPLATE, "$workDir/$template") || die "Can't open $template";
-    $paramFile = "$workDir/param_pythia_5gev_$index";
+    open(TEMPLATE, "$workDir/scripts/$template") || die "Can't open $template";
+    $paramFile = "param_pythia_5gev_$index";
     open(PARAMETERS, "> $paramFile") || die "Can't write into $paramFile $!"; # open file for writing
     
     while (defined($line = <TEMPLATE>)) {
@@ -39,13 +38,17 @@ while ($i < $startNum+$jobsNum) {
     }
     close(PARAMETERS);
     close(TEMPLATE);
-    
-    #    $logFile = "$prefix$index.log";
-    #    $pythiaCMD = '$workDir/pythia.exe $paramFile >& $logFile';
-    #    system($pythiaCMD);
 
-    #    $mvCMD = "mv pythia.root $prefix$index.root";
-    #    system($mvCMD);
+    system("date"); # print the date and time
+    
+    $logFile = "$prefix$index.log";
+    $pythiaCMD = "$workDir/pythia.exe $paramFile >& $logFile";
+    print "CMD: $pythiaCMD\n";
+    system($pythiaCMD);
+
+    $mvCMD = "mv pythia.root $prefix$index.root";
+    print "CMD: $mvCMD\n";
+    system($mvCMD);
     
     $i++;
 }
